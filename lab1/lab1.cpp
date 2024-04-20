@@ -1,145 +1,99 @@
 #include <iostream>
-#include <fstream>
-#include <optional>
 #include <vector>
 
-enum class Color
-{
-    RED,
-    BLUE,
-    GREEN
-};
+#include "../data/data.hpp"
+#include "serializator.hpp"
 
-struct Car
+template <typename T>
+int linearSearch(const std::vector<T> &arr, const T &key)
 {
-    std::string name;
-    Color color;
-    int horse_power;
-};
-
-bool serializeCar(std::ostream &os, const Car &car)
-{
-    auto found = car.name.find(',');
-    if (found != std::string::npos)
+    for (size_t i = 0; i < arr.size(); ++i)
     {
-        return false;
-    }
-
-    os << car.name << ',';
-    os << static_cast<short>(car.color) << ',';
-    os << car.horse_power << std::endl;
-    return true;
-}
-
-std::optional<Car> deserializeCar(std::istream &is)
-{
-    Car car;
-
-    std::getline(is, car.name, ',');
-
-    std::string color;
-    std::getline(is, color, ',');
-
-    try
-    {
-        auto temp = stoi(color);
-        // проверяем выход за диапозон Color
-        if (temp < static_cast<int>(Color::RED) || temp > static_cast<int>(Color::GREEN))
+        if (arr[i] == key)
         {
-            return std::nullopt;
-        }
-        car.color = static_cast<Color>(temp);
-    }
-    catch (std::invalid_argument const &ex)
-    {
-        return std::nullopt;
-    }
-
-    std::string horse_power;
-    std::getline(is, horse_power);
-
-    try
-    {
-        car.horse_power = stoi(horse_power);
-    }
-    catch (std::invalid_argument const &ex)
-    {
-        return std::nullopt;
-    }
-
-    return car;
-}
-
-template<typename T>
-int linearSearch(const std::vector<T>& arr, const T& key) {
-    for (size_t i = 0; i < arr.size(); ++i) {
-        if (arr[i] == key) {
-            return i; // Возвращаем индекс, если ключ найден
+            return i;
         }
     }
-    return -1; // Возвращаем -1, если ключ не найден
+    return -1;
 }
 
-struct Node {
+struct Node
+{
     int data;
-    Node* left;
-    Node* right;
-    
+    Node *left;
+    Node *right;
+
     Node(int value) : data(value), left(nullptr), right(nullptr) {}
 };
 
-Node* binarySearchTree(Node* root, int key) {
-    if (root == nullptr || root->data == key) {
+Node *binarySearchTree(Node *root, int key)
+{
+    if (root == nullptr || root->data == key)
+    {
         return root;
     }
-    
-    if (root->data < key) {
+
+    if (root->data < key)
+    {
         return binarySearchTree(root->right, key);
     }
-    
+
     return binarySearchTree(root->left, key);
 }
 
-template<typename T>
-int binarySearch(const std::vector<T>& arr, const T& key) {
+template <typename T>
+int binarySearch(const std::vector<T> &arr, const T &key)
+{
     int left = 0;
     int right = arr.size() - 1;
-    
-    while (left <= right) {
+
+    while (left <= right)
+    {
         int mid = left + (right - left) / 2;
-        
-        if (arr[mid] == key) {
-            return mid; // Возвращаем индекс, если ключ найден
-        } else if (arr[mid] < key) {
+
+        if (arr[mid] == key)
+        {
+            return mid;
+        }
+        else if (arr[mid] < key)
+        {
             left = mid + 1;
-        } else {
+        }
+        else
+        {
             right = mid - 1;
         }
     }
-    
-    return -1; // Возвращаем -1, если ключ не найден
+
+    return -1;
 }
 
-template<typename T>
-int interpolationSearch(const std::vector<T>& arr, const T& key) {
+template <typename T>
+int interpolationSearch(const std::vector<T> &arr, const T &key)
+{
     int low = 0;
     int high = arr.size() - 1;
-    
-    while (low <= high && key >= arr[low] && key <= arr[high]) {
+
+    while (low <= high && key >= arr[low] && key <= arr[high])
+    {
         int pos = low + ((key - arr[low]) * (high - low) / (arr[high] - arr[low]));
-        
-        if (arr[pos] == key) {
-            return pos; // Возвращаем индекс, если ключ найден
-        } else if (arr[pos] < key) {
+
+        if (arr[pos] == key)
+        {
+            return pos;
+        }
+        else if (arr[pos] < key)
+        {
             low = pos + 1;
-        } else {
+        }
+        else
+        {
             high = pos - 1;
         }
     }
-    
-    return -1; // Возвращаем -1, если ключ не найден
-}
 
+    return -1;
+}
 
 std::vector<Car> readCsv(std::istream &is)
 {
@@ -206,7 +160,7 @@ int main()
         std::cerr << "Не удалось сериализовать объекты :(" << std::endl;
         return 3;
     }
-    
+
     file.close();
 
     return 0;
