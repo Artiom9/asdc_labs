@@ -64,10 +64,13 @@ struct LinkedList {
 
     void remove(Node<T>* node) {
         if (!node) return;
+
         if (node->prev) node->prev->next = node->next;
+        else head = node->next;
+        
         if (node->next) node->next->prev = node->prev;
-        if (node == head) head = node->next;
-        if (node == tail) tail = node->prev;
+        else tail = node->prev;
+
         delete node;
         --size;
     }
