@@ -14,7 +14,7 @@ template<typename T>
 struct LinkedList {
     Node<T>* head;
     Node<T>* tail;
-    int size;
+    std::size_t size;
 
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
@@ -32,7 +32,7 @@ struct LinkedList {
             node->next = newNode;
             if (node == tail) tail = newNode;
         }
-        size++;
+        ++size;
         return newNode;
     }
 
@@ -50,7 +50,7 @@ struct LinkedList {
             node->prev = newNode;
             if (node == head) head = newNode;
         }
-        size++;
+        ++size;
         return newNode;
     }
 
@@ -69,7 +69,7 @@ struct LinkedList {
         if (node == head) head = node->next;
         if (node == tail) tail = node->prev;
         delete node;
-        size--;
+        --size;
     }
 
     void assertNoCycles() {

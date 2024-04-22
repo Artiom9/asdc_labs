@@ -13,12 +13,13 @@ template<typename T>
 struct LinkedList {
     Node<T>* head;
     Node<T>* tail;
-    int size;
+    std::size_t size;
 
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
     Node<T>* insertAfter(Node<T>* node, T value) {
         Node<T>* newNode = new Node<T>(value);
+        //If there is no node (nullptr), then write it at the beginning of the list
         if (!node) {
             newNode->next = head;
             head = newNode;

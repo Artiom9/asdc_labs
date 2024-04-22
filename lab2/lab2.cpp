@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <span>
 
 #include "../data/data.hpp"
-#include "serializator.hpp"
+#include "serializer.hpp"
 
 template <typename T>
-int linearSearch(const std::vector<T> &arr, const T &key)
+std::size_t linearSearch(std::span<T> arr, const T &key)
 {
     for (size_t i = 0; i < arr.size(); ++i)
     {
@@ -14,7 +15,7 @@ int linearSearch(const std::vector<T> &arr, const T &key)
             return i;
         }
     }
-    return -1;
+    return SIZE_MAX;
 }
 
 struct Node
@@ -42,14 +43,14 @@ Node *binarySearchTree(Node *root, int key)
 }
 
 template <typename T>
-int binarySearch(const std::vector<T> &arr, const T &key)
+std::size_t binarySearch(std::span<T> arr, const T &key)
 {
-    int left = 0;
-    int right = arr.size() - 1;
+    std::size_t left = 0;
+    std::size_t right = arr.size() - 1;
 
     while (left <= right)
     {
-        int mid = left + (right - left) / 2;
+        auto mid = left + (right - left) / 2;
 
         if (arr[mid] == key)
         {
@@ -65,18 +66,18 @@ int binarySearch(const std::vector<T> &arr, const T &key)
         }
     }
 
-    return -1;
+    return SIZE_MAX;
 }
 
 template <typename T>
-int interpolationSearch(const std::vector<T> &arr, const T &key)
+std::size_t interpolationSearch(std::span<T> arr, const T &key)
 {
-    int low = 0;
-    int high = arr.size() - 1;
+    std::size_t low = 0;
+    std::size_t high = arr.size() - 1;
 
     while (low <= high && key >= arr[low] && key <= arr[high])
     {
-        int pos = low + ((key - arr[low]) * (high - low) / (arr[high] - arr[low]));
+        auto pos = low + ((key - arr[low]) * (high - low) / (arr[high] - arr[low]));
 
         if (arr[pos] == key)
         {
@@ -92,7 +93,7 @@ int interpolationSearch(const std::vector<T> &arr, const T &key)
         }
     }
 
-    return -1;
+    return SIZE_MAX;
 }
 
 std::vector<Car> readCsv(std::istream &is)
@@ -154,6 +155,12 @@ int main()
     {
         std::cout << car.name << " " << static_cast<int>(car.color) << " " << car.horse_power << std::endl;
     }
+
+    std::vector v {1, 2, 3, 4, 5, 7};
+    const auto v_span = std::span(v);
+    std::cout << "Index of value 4: " << linearSearch(v_span, 4) << std::endl;
+    std::cout << "Index of value 4: " << binarySearch(v_span, 4) << std::endl;
+    std::cout << "Index of value 4: " << interpolationSearch(v_span, 4) << std::endl;
 
     if (not writeCsv(file, cars))
     {
